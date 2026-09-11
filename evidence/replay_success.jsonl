@@ -1,0 +1,6 @@
+{"run_type": "replay", "event": "replay_started", "capability": "lookup_member_balance", "member_id": "[REDACTED]", "session_owner": "automation", "session_state": "running", "timestamp": "2026-09-11T13:19:19.888565"}
+{"run_type": "replay", "event": "step_completed", "step": 1, "action": "fill", "target": null, "status": "success", "timestamp": "2026-09-11T13:19:19.971826"}
+{"run_type": "replay", "event": "step_completed", "step": 2, "action": "click", "target": "Search", "status": "success", "timestamp": "2026-09-11T13:19:20.066829"}
+{"run_type": "replay", "event": "output_extracted", "step": 3, "target": null, "status": "success", "timestamp": "2026-09-11T13:19:20.109356"}
+{"run_type": "replay", "event": "checkpoint_passed", "checkpoint": "Member Details", "status": "success", "timestamp": "2026-09-11T13:19:20.110759"}
+{"run_type": "replay", "event": "replay_finished", "final_status": "success", "session_owner": "automation", "session_state": "running", "timestamp": "2026-09-11T13:19:20.110983"}

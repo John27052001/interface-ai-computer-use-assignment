@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Member Details | Harbor Credit Union</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f5f7;
+            color: #20242a;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+        }
+
+        .topbar {
+            height: 64px;
+
+            background: #ffffff;
+            border-bottom: 1px solid #dedfe3;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 40px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+
+            background: #1f3d5a;
+            border-radius: 6px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .brand-name {
+            font-weight: 650;
+            font-size: 16px;
+        }
+
+        .internal-label {
+            color: #777c84;
+            font-size: 13px;
+        }
+
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            width: 220px;
+            background: #ffffff;
+
+            border-right: 1px solid #dedfe3;
+
+            padding: 28px 18px;
+        }
+
+        .nav-title {
+            color: #91959c;
+
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+
+            margin: 0 10px 12px;
+        }
+
+        .nav-item {
+            padding: 10px 12px;
+            border-radius: 5px;
+            margin-bottom: 4px;
+
+            color: #4b5058;
+            font-size: 14px;
+        }
+
+        .nav-item.active {
+            background: #edf2f6;
+            color: #173a56;
+            font-weight: 600;
+        }
+
+        main {
+            flex: 1;
+            padding: 46px;
+        }
+
+        .content {
+            max-width: 850px;
+        }
+
+        .breadcrumb {
+            color: #7a7f87;
+            font-size: 13px;
+
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0;
+
+            font-size: 29px;
+            font-weight: 650;
+            letter-spacing: -0.7px;
+        }
+
+        .member-id {
+            margin-top: 8px;
+
+            color: #70757d;
+            font-size: 13px;
+        }
+
+        .alert {
+            margin-bottom: 24px;
+
+            padding: 18px 20px;
+
+            border-radius: 6px;
+            border: 1px solid;
+        }
+
+        .alert h2 {
+            margin: 0 0 7px;
+
+            font-size: 15px;
+            font-weight: 650;
+        }
+
+        .alert p {
+            margin: 0;
+
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .alert button {
+            margin-top: 14px;
+
+            height: 36px;
+            padding: 0 16px;
+
+            border: 1px solid transparent;
+            border-radius: 5px;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        .security {
+            background: #fff9ea;
+            border-color: #e6d39b;
+        }
+
+        .security button {
+            background: #ffffff;
+            border-color: #c9b97f;
+            color: #54491e;
+        }
+
+        .approval {
+            background: #fff3f1;
+            border-color: #e0b9b3;
+        }
+
+        .approval button {
+            background: #7c352d;
+            color: white;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            margin-bottom: 28px;
+        }
+
+        .status {
+            background: #edf6ef;
+            color: #2c6540;
+
+            padding: 6px 10px;
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .card {
+            background: #ffffff;
+
+            border: 1px solid #dcdee2;
+            border-radius: 8px;
+
+            box-shadow: 0 1px 2px rgba(20, 25, 30, 0.04);
+        }
+
+        .card-header {
+            padding: 19px 24px;
+
+            border-bottom: 1px solid #e4e5e8;
+
+            font-size: 15px;
+            font-weight: 650;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .detail {
+            padding: 22px 24px;
+
+            border-bottom: 1px solid #ececef;
+        }
+
+        .detail:nth-child(odd) {
+            border-right: 1px solid #ececef;
+        }
+
+        .detail-label {
+            color: #797e86;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            margin-bottom: 7px;
+        }
+
+        .detail-value {
+            color: #25292e;
+
+            font-size: 16px;
+            font-weight: 550;
+        }
+
+        .balance {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .actions {
+            padding: 18px 24px;
+        }
+
+        .back-link {
+            color: #315d7b;
+
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer-note {
+            margin-top: 28px;
+
+            color: #969aa1;
+            font-size: 12px;
+        }
+
+        @media (max-width: 760px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .topbar {
+                padding: 0 20px;
+            }
+
+            main {
+                padding: 30px 20px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail:nth-child(odd) {
+                border-right: none;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <div class="brand-mark">
+                HC
+            </div>
+
+            <div class="brand-name">
+                Harbor Credit Union
+            </div>
+
+        </div>
+
+        <div class="internal-label">
+            Operations Console
+        </div>
+
+    </header>
+
+
+    <div class="layout">
+
+        <aside class="sidebar">
+
+            <div class="nav-title">
+                Member Services
+            </div>
+
+            <div class="nav-item active">
+                Member Search
+            </div>
+
+            <div class="nav-item">
+                Accounts
+            </div>
+
+            <div class="nav-item">
+                Service Requests
+            </div>
+
+            <div class="nav-item">
+                Activity
+            </div>
+
+        </aside>
+
+
+        <main>
+
+            <div class="content">
+
+                <!-- SECURITY NOTICE -->
+
+                {% if member.show_notice %}
+
+                <div
+                    id="security-notice"
+                    class="alert security"
+                >
+
+                    <h2>
+                        Security Notice
+                    </h2>
+
+                    <p>
+                        Please acknowledge this notice before continuing.
+                    </p>
+
+                    <button onclick="dismissNotice()">
+                        Dismiss
+                    </button>
+
+                </div>
+
+                {% endif %}
+
+
+                <!-- HUMAN APPROVAL -->
+
+                {% if member.requires_approval %}
+
+                <div
+                    id="approval-box"
+                    class="alert approval"
+                >
+
+                    <h2>
+                        Manager Approval Required
+                    </h2>
+
+                    <p>
+                        A human operator must approve access before this
+                        account can continue.
+                    </p>
+
+                    <button onclick="approveAccess()">
+                        Approve
+                    </button>
+
+                </div>
+
+                {% endif %}
+
+
+                <!-- MEMBER DETAILS -->
+
+                <div id="member-details">
+
+                    <div class="breadcrumb">
+                        Member Services / Member Details
+                    </div>
+
+
+                    <div class="header-row">
+
+                        <div>
+
+                            <h1>
+                                Member Details
+                            </h1>
+
+                            <div class="member-id">
+                                Member ID: {{ member_id }}
+                            </div>
+
+                        </div>
+
+                        <div class="status">
+                            Active
+                        </div>
+
+                    </div>
+
+
+                    <section class="card">
+
+                        <div class="card-header">
+                            Account Summary
+                        </div>
+
+
+                        <div class="details-grid">
+
+                            <div class="detail">
+
+                                <div class="detail-label">
+                                    Member Name
+                                </div>
+
+                                <div class="detail-value">
+                                    {{ member.name }}
+                                </div>
+
+                            </div>
+
+
+                            <div class="detail">
+
+                                <div class="detail-label">
+                                    Member ID
+                                </div>
+
+                                <div class="detail-value">
+                                    {{ member_id }}
+                                </div>
+
+                            </div>
+
+
+                            <div class="detail">
+
+                                <div class="detail-label">
+                                    Checking Balance
+                                </div>
+
+                                <div class="detail-value balance">
+                                    ${{ member.checking }}
+                                </div>
+
+                            </div>
+
+
+                            <div class="detail" id="savings-balance-field">
+
+    <div class="detail-label">
+        Savings Balance
+    </div>
+
+    <div class="detail-value balance">
+        ${{ member.savings }}
+    </div>
+
+</div>
+
+                        </div>
+
+
+                        <div class="actions">
+
+                            <a
+                                class="back-link"
+                                href="/"
+                            >
+                                ← Back to Search
+                            </a>
+
+                        </div>
+
+                    </section>
+
+
+                    <div class="footer-note">
+                        Internal operations system · Authorized personnel only
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <script>
+
+        function dismissNotice() {
+
+            const notice =
+                document.getElementById(
+                    "security-notice"
+                );
+
+            if (notice) {
+                notice.remove();
+            }
+        }
+
+
+        function approveAccess() {
+
+            const approvalBox =
+                document.getElementById(
+                    "approval-box"
+                );
+
+            if (approvalBox) {
+                approvalBox.remove();
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

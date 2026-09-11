@@ -1,0 +1,8 @@
+{"run_type": "replay", "event": "replay_started", "capability": "lookup_member_balance", "member_id": "[REDACTED]", "session_owner": "automation", "session_state": "running", "timestamp": "2026-09-11T13:19:40.898437"}
+{"run_type": "replay", "event": "step_completed", "step": 1, "action": "fill", "target": null, "status": "success", "timestamp": "2026-09-11T13:19:40.975647"}
+{"run_type": "replay", "event": "step_completed", "step": 2, "action": "click", "target": "Search", "status": "success", "timestamp": "2026-09-11T13:19:41.080973"}
+{"run_type": "replay", "event": "human_intervention_requested", "step": 3, "reason": "MANAGER_APPROVAL_REQUIRED", "session_owner": "human", "session_state": "paused", "timestamp": "2026-09-11T13:19:41.119091"}
+{"run_type": "replay", "event": "human_intervention_completed", "step": 3, "session_owner": "automation", "session_state": "running", "status": "resumed", "timestamp": "2026-09-11T13:19:48.745373"}
+{"run_type": "replay", "event": "output_extracted", "step": 3, "target": null, "status": "success", "timestamp": "2026-09-11T13:19:48.749845"}
+{"run_type": "replay", "event": "checkpoint_passed", "checkpoint": "Member Details", "status": "success", "timestamp": "2026-09-11T13:19:48.752102"}
+{"run_type": "replay", "event": "replay_finished", "final_status": "success", "session_owner": "automation", "session_state": "running", "timestamp": "2026-09-11T13:19:48.752313"}

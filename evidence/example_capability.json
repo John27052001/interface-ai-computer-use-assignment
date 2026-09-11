@@ -1,0 +1,65 @@
+{
+  "name": "lookup_member_balance",
+  "version": "1.1",
+  "input": {
+    "member_id": "string"
+  },
+  "steps": [
+    {
+      "action": "fill",
+      "target": {
+        "strategies": [
+          {
+            "type": "label",
+            "value": "Member ID"
+          },
+          {
+            "type": "role",
+            "role": "textbox",
+            "name": "Member ID"
+          }
+        ]
+      },
+      "value": "{{member_id}}"
+    },
+    {
+      "action": "click",
+      "target": {
+        "strategies": [
+          {
+            "type": "role",
+            "role": "button",
+            "name": "Search"
+          },
+          {
+            "type": "text",
+            "value": "Search"
+          }
+        ]
+      }
+    },
+    {
+      "action": "extract",
+      "target": {
+        "strategies": [
+          {
+            "type": "css",
+            "value": "#savings-balance-field"
+          },
+          {
+            "type": "text",
+            "value": "Savings Balance"
+          }
+        ]
+      },
+      "output": "savings_balance"
+    }
+  ],
+  "output": {
+    "savings_balance": "string"
+  },
+  "checkpoint": {
+    "type": "text_present",
+    "value": "Member Details"
+  }
+}

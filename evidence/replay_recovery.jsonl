@@ -1,0 +1,8 @@
+{"run_type": "replay", "event": "replay_started", "capability": "lookup_member_balance", "member_id": "[REDACTED]", "session_owner": "automation", "session_state": "running", "timestamp": "2026-09-11T13:19:30.708693"}
+{"run_type": "replay", "event": "step_completed", "step": 1, "action": "fill", "target": null, "status": "success", "timestamp": "2026-09-11T13:19:30.775483"}
+{"run_type": "replay", "event": "step_completed", "step": 2, "action": "click", "target": "Search", "status": "success", "timestamp": "2026-09-11T13:19:30.885237"}
+{"run_type": "replay", "event": "recoverable_condition_detected", "step": 3, "condition": "SECURITY_NOTICE", "timestamp": "2026-09-11T13:19:30.925457"}
+{"run_type": "replay", "event": "recoverable_condition_resolved", "step": 3, "condition": "SECURITY_NOTICE", "status": "success", "timestamp": "2026-09-11T13:19:30.954237"}
+{"run_type": "replay", "event": "output_extracted", "step": 3, "target": null, "status": "success", "timestamp": "2026-09-11T13:19:30.957670"}
+{"run_type": "replay", "event": "checkpoint_passed", "checkpoint": "Member Details", "status": "success", "timestamp": "2026-09-11T13:19:30.958809"}
+{"run_type": "replay", "event": "replay_finished", "final_status": "success", "session_owner": "automation", "session_state": "running", "timestamp": "2026-09-11T13:19:30.958959"}
