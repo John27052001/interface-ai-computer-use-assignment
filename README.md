@@ -1,63 +1,82 @@
 # Computer-Use Automation System
 
-Take-home engineering project for interface.ai.
+**Author:** Megha John Babu  
+**Take-home assignment for interface.ai**
 
-This project demonstrates a computer-use automation system where an LLM learns how to complete a task through a real user interface, saves the successful workflow as a reusable capability, and later replays that capability deterministically without using the LLM again.
+This project demonstrates a computer-use automation system where an LLM discovers how to complete a task through a real user interface, records the successful workflow as a reusable capability, and later replays that capability deterministically without an LLM in the decision loop.
 
 ## Demo
 
 The demo uses a fictional banking application called **Harbor Credit Union Operations Console**.
 
-The main task is:
+The goal is:
 
 > Find a member by ID and return their savings balance.
 
 The system works in two stages:
 
-1. **Discovery** — Gemini observes the UI, decides what action to take, and Playwright performs the action.
-2. **Replay** — the discovered capability is executed deterministically using Playwright without an LLM.
+1. **Discovery** — Gemini observes the live UI, decides the next action, and Playwright performs it.
+2. **Replay** — the saved capability is executed deterministically with Playwright without calling the LLM.
+
+## How It Works
+
+```text
+Natural-language goal
+        ↓
+LLM-driven discovery
+        ↓
+Observe → Decide → Act
+        ↓
+Successful workflow
+        ↓
+Versioned capability artifact
+        ↓
+Deterministic replay
+        ↓
+Checkpoint verification
+        ↓
+Structured result
+```
+
+The LLM participates only during discovery. Once a capability has been recorded, replay executes the saved steps directly.
 
 ## Setup
 
 ### 1. Install dependencies
 
-From the project folder:
+From the project root:
 
 ```bash
 pip3 install -r requirements.txt
 ```
 
-Install the Playwright browser:
+Install Chromium for Playwright:
 
 ```bash
 playwright install chromium
 ```
 
-### 2. Set the Gemini API key
+### 2. Configure Gemini
 
-The Gemini API key is required only for the discovery run.
+The Gemini API key is required only for discovery.
 
 ```bash
 export GEMINI_API_KEY="your-api-key"
 ```
 
-Never place the real API key in the source code or commit it to GitHub.
+Do not place the real API key in source code or commit it to the repository.
 
-## Run the Demo Application
+## Start the Demo Application
 
-Start the local banking application:
+Run:
 
 ```bash
 python3 demo_app/app.py
 ```
 
-The application runs at:
+The application will be available at `http://127.0.0.1:5000`.
 
-```text
-http://127.0.0.1:5000
-```
-
-Keep this terminal running while using discovery or replay.
+Keep the demo application running while using discovery or replay.
 
 ## Run LLM Discovery
 
@@ -67,23 +86,24 @@ Open another terminal and run:
 python3 discovery.py
 ```
 
-During discovery:
+During discovery, the system:
 
-1. Gemini observes the current UI.
-2. Gemini chooses the next action.
-3. Playwright performs the action.
-4. The process repeats until the goal is complete.
-5. The successful workflow is saved as a reusable capability.
+1. observes the current UI,
+2. asks Gemini for the next action,
+3. performs the action through Playwright,
+4. observes the updated UI,
+5. repeats until the goal is complete,
+6. records the successful workflow.
 
-The generated capability is stored at:
+A successful run produces:
 
-```text
-capabilities/discovered_lookup_member_balance.json
-```
+`capabilities/discovered_lookup_member_balance.json`
+
+The artifact contains parameterized inputs, ordered actions, locator strategies, outputs, and a success checkpoint.
 
 ## Run Deterministic Replay
 
-Replay does not use an LLM.
+Replay does **not** call Gemini or any other LLM.
 
 Run:
 
@@ -91,7 +111,7 @@ Run:
 python3 replay.py 12345
 ```
 
-Example result:
+Example output:
 
 ```json
 {
@@ -102,19 +122,23 @@ Example result:
 }
 ```
 
-The replay engine also verifies the configured success checkpoint.
+Replay also verifies that the expected `Member Details` checkpoint was reached.
+
+The same capability can be reused with a different input:
+
+```bash
+python3 replay.py 54321
+```
 
 ## Demo Scenarios
 
-The demo application includes several scenarios for testing runtime behavior:
-
-| Member ID | Behavior |
+| Member ID | Scenario |
 | --- | --- |
 | `12345` | Normal successful replay |
 | `54321` | Successful replay with a different input |
 | `77777` | Recoverable Security Notice |
 | `88888` | Human approval and live-session handoff |
-| `99999` | Member not found business outcome |
+| `99999` | Member-not-found business outcome |
 
 ### Recoverable Condition
 
@@ -124,9 +148,11 @@ Run:
 python3 replay.py 77777
 ```
 
-A Security Notice appears. Replay detects the known condition, dismisses it, and continues automatically.
+The application presents a **Security Notice**.
 
-### Human Handoff
+Replay recognizes this as a known recoverable condition, dismisses the notice, and continues execution.
+
+### Human-in-the-Loop Handoff
 
 Run:
 
@@ -134,11 +160,18 @@ Run:
 python3 replay.py 88888
 ```
 
-A Manager Approval Required state appears.
+The application presents **Manager Approval Required**.
 
-Automation pauses and transfers control of the same browser session to the human operator.
+Replay pauses and transfers ownership of the existing browser session from automation to the human operator.
 
-Click **Approve** in the open browser, return to the terminal, and press Enter. Control returns to automation and replay continues.
+The operator:
+
+1. uses the already-open Playwright browser,
+2. clicks **Approve**,
+3. returns to the terminal,
+4. presses Enter.
+
+The same browser session is preserved. Control is then returned to automation and replay continues.
 
 ### Business Outcome
 
@@ -148,7 +181,7 @@ Run:
 python3 replay.py 99999
 ```
 
-The system returns:
+Result:
 
 ```json
 {
@@ -157,75 +190,103 @@ The system returns:
 }
 ```
 
-A missing member is treated as a legitimate business outcome rather than a system crash.
+A missing member is treated as an expected business outcome rather than an automation failure.
+
+## Capability Artifact
+
+Discovery creates a versioned JSON capability containing:
+
+- parameterized inputs,
+- declared outputs,
+- ordered actions,
+- locator strategies,
+- a success checkpoint.
+
+Example:
+
+```json
+{
+  "name": "lookup_member_balance",
+  "version": "1.1",
+  "input": {
+    "member_id": "string"
+  },
+  "output": {
+    "savings_balance": "string"
+  }
+}
+```
+
+The complete artifact is available at:
+
+`capabilities/discovered_lookup_member_balance.json`
+
+Capabilities are validated with Pydantic before replay begins. Invalid artifacts are rejected before browser automation starts.
+
+## Locator Strategy
+
+Targets use ordered locator strategies instead of relying on one brittle selector.
+
+The implementation supports:
+
+- label-based locators,
+- accessibility role/name locators,
+- text locators,
+- CSS locators.
+
+This separates the logical capability from a single DOM selector and provides a clean seam for supporting less structured application surfaces.
+
+## Runtime Error Handling
+
+Replay distinguishes between:
+
+- **Success** — the task completed and declared outputs were returned.
+- **Business outcome** — the application returned a legitimate result such as `MEMBER_NOT_FOUND`.
+- **Recoverable condition** — a known interruption can be handled safely and replay continues.
+- **Hard failure** — replay cannot safely continue and returns structured diagnostic information.
+
+Checkpoint failures and Playwright failures are surfaced as structured errors rather than silently proceeding.
 
 ## Safety
 
 The replay engine includes:
 
-- allowed action types
-- blocked risky actions
-- allowed-domain validation
-- human escalation for approval-required states
-- sensitive input redaction in logs
+- an allowlist of supported action types,
+- an allowlist of permitted domains,
+- blocking of risky or irreversible targets,
+- human escalation for approval-required states,
+- sensitive-input redaction in logs.
 
-The demo automation is restricted to the local application.
+The demo automation is restricted to `localhost` / `127.0.0.1`.
 
-Sensitive member input is stored in logs as:
+Sensitive member input is recorded in evidence logs as:
 
 ```text
 [REDACTED]
 ```
 
-## Capability Artifact
+rather than persisting the raw identifier.
 
-A successful discovery run produces a versioned JSON capability containing:
+## Evidence and Observability
 
-- input parameters
-- output definitions
-- ordered actions
-- locator strategies
-- success checkpoint
+Structured evidence is stored under `evidence/`.
 
-The artifact is validated with Pydantic before replay begins.
+The repository includes:
 
-Replay refuses to execute an invalid artifact.
+- `evidence/discovery_run.jsonl`
+- `evidence/replay_success.jsonl`
+- `evidence/replay_recovery.jsonl`
+- `evidence/replay_handoff.jsonl`
+- `evidence/replay_business_outcome.jsonl`
+- `evidence/example_capability.json`
 
-## Locator Strategy
+Failure screenshots are stored under `evidence/screenshots/`.
 
-Each target can contain multiple locator strategies.
-
-For example, the Search button can first be located using its accessibility role and name, with a text-based strategy available as a fallback.
-
-This avoids depending on a single brittle CSS selector.
-
-## Evidence
-
-Structured run evidence is stored in:
-
-```text
-evidence/
-```
-
-The project records evidence for:
-
-- LLM discovery
-- successful replay
-- recoverable conditions
-- business outcomes
-- human handoff
-
-Failure screenshots are stored in:
-
-```text
-evidence/screenshots/
-```
-
-No real customer data or credentials are used in the demo.
+The evidence demonstrates the real LLM-driven discovery run as well as deterministic replay and exceptional runtime states.
 
 ## Tests
 
-Run all automated tests with:
+Run the complete test suite with:
 
 ```bash
 python3 -m pytest tests/ -v
@@ -233,23 +294,51 @@ python3 -m pytest tests/ -v
 
 Tests cover:
 
-- safety policies
-- allowed domains
-- sensitive-data redaction
-- capability artifact structure
-- session ownership and human control transfer
+- action safety policies,
+- domain restrictions,
+- sensitive-data redaction,
+- capability artifact structure,
+- locator metadata,
+- checkpoint configuration,
+- human/automation session ownership.
 
-## Design Write-Up
-
-Detailed architecture decisions, trade-offs, error handling, safety, human escalation, heterogeneous surfaces, multi-tenant reuse, and deliberate scope cuts are documented in:
+## Project Structure
 
 ```text
-REPORT.md
+.
+├── capabilities/
+│   ├── discovered_lookup_member_balance.json
+│   └── schema.py
+│
+├── demo_app/
+│   ├── app.py
+│   └── templates/
+│
+├── escalation/
+│   └── session.py
+│
+├── evidence/
+│   ├── screenshots/
+│   └── ...
+│
+├── observability/
+│   └── logger.py
+│
+├── safety/
+│   ├── policy.py
+│   └── redaction.py
+│
+├── tests/
+│
+├── discovery.py
+├── replay.py
+├── requirements.txt
+├── README.md
+└── REPORT.md
 ```
 
-# Computer-Use Automation System
+## Design Report
 
-**Author:** Megha John Babu  
-**Take-home assignment for interface.ai**
+Architecture decisions, artifact design, deterministic replay, error handling, heterogeneous-surface considerations, multi-tenant reuse, human handoff, safety, trade-offs, and deliberate scope cuts are documented in:
 
-This project demonstrates a computer-use automation system where an LLM learns how to complete a task through a real user interface, saves the successful workflow as a reusable capability, and later replays that capability deterministically without using the LLM again.
+`REPORT.md`
