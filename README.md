@@ -246,3 +246,10 @@ Detailed architecture decisions, trade-offs, error handling, safety, human escal
 ```text
 REPORT.md
 ```
+
+# Computer-Use Automation System
+
+**Author:** Megha John Babu  
+**Take-home assignment for interface.ai**
+
+This project demonstrates a computer-use automation system where an LLM learns how to complete a task through a real user interface, saves the successful workflow as a reusable capability, and later replays that capability deterministically without using the LLM again.
